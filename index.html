@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Playback with FastAPI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Play Audio with FastAPI</h1>
+    <button onclick="playAudio('1')">Play Audio 1</button>
+    <button onclick="playAudio('2')">Play Audio 2</button>
+    <button onclick="playAudio('3')">Play Audio 3</button>
+
+    <h1>Click once and hover patiently for a reward</h1>
+    <img id="myImage" src="https://img.freepik.com/premium-photo/pink-soft-tissue-form-female-genital-organs-vulva-labia-vagina-concept-with-delicate-flower_96727-2787.jpg" alt="Placeholder Image">
+
+    <audio id="audioPlayer" controls>
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="audioPlayer2" controls>
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        let flag = false;
+        let current_audio = null;
+        const audioPlayer = document.getElementById('audioPlayer');
+        let audioPlayer2;
+        let image;
+        let timeoutId;
+
+        function handleMouseLeave(){
+            if(!audioPlayer2.paused){
+                audioPlayer2.pause();
+            } 
+        }
+
+        function handleMouseEnter(){
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+             // Your code to execute after the delay
+             audioPlayer2.play();
+            }, 10000); // 10000 milliseconds delay
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            image = document.getElementById('myImage');
+            audioPlayer2 = document.getElementById('audioPlayer2');
+            audioPlayer2.src = `https://proj1-1.onrender.com/play/4`; 
+            audioPlayer2.load();
+            image.addEventListener('mouseenter', handleMouseEnter);
+            image.addEventListener('mouseleave', handleMouseLeave);
+        });
+
+        async function playAudio(audioName) {
+            if(current_audio == audioName){
+                if(!flag){
+                    audioPlayer.play();
+                    flag = true;
+                } else {
+                    audioPlayer.pause();
+                    flag = false;
+                }
+                return;
+            } else if(flag){
+                audioPlayer.pause();
+                flag = false;
+            }
+            audioPlayer.src = `https://proj1-1.onrender.com/play/${audioName}`;
+            audioPlayer.play();
+            flag = true;
+            current_audio = audioName;
+        }
+    </script>
+</body>
+</html>
