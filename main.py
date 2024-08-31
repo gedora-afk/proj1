@@ -1,14 +1,16 @@
-from typing import Optional
-
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+import os
 
 app = FastAPI()
 
+# Path to the directory containing audio files
+AUDIO_DIR = os.path.join(os.path.dirname(__file__), "sounds")
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/play/{audio_name}")
+async def play_audio(audio_name: str):
+    file_path = os.path.join(AUDIO_DIR, f"{audio_name}.mp3")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, media_type='audio/mpeg')
+    else:
+        return {"error": "Audio file not found"}
